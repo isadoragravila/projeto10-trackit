@@ -2,13 +2,14 @@ import styled from 'styled-components';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useState } from 'react';
+import logo from '../Assets/logo.png';
 
 export default function TelaCadastro() {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [image, setImage] = useState('');
     const [password, setPassword] = useState('');
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     function fazerCadastro (event) {
         event.preventDefault();
@@ -31,8 +32,8 @@ export default function TelaCadastro() {
         });
     }
     return (
-        <Cadastro>
-            <img src='' alt='logo' />
+        <Conteiner>
+            <img src={logo} alt='logo' />
             <h1>TrackIt</h1>
             <form onSubmit={fazerCadastro}>
                 <input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -46,11 +47,11 @@ export default function TelaCadastro() {
                     Já tem uma conta? Faça login!
                 </Login>
             </Link>
-        </Cadastro>
+        </Conteiner>
     );
 }
 
-const Cadastro = styled.div`
+const Conteiner = styled.div`
     max-width: 500px;
     min-width: 375px;
     display: flex;
@@ -65,6 +66,11 @@ const Cadastro = styled.div`
         font-size: 69px;
         color: #126BA5;
       }
+
+    img {
+        width: 182px;
+        height: 102px;
+    }
 `;
 
 const Login = styled.div`

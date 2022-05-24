@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useState } from 'react';
+import logo from '../Assets/logo.png';
 
 export default function TelaLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [token, setToken] = useState('');
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     function fazerLogin (event) {
         event.preventDefault();
@@ -26,12 +27,11 @@ export default function TelaLogin() {
         promise.catch(err => {
             alert(err.response.data.message);
         });
-
     }
 
     return (
-        <Login>
-            <img src='' alt='logo' />
+        <Conteiner>
+            <img src={logo} alt='logo' />
             <h1>TrackIt</h1>
             <form onSubmit={fazerLogin}>
                 <input type="email" placeholder="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -43,11 +43,11 @@ export default function TelaLogin() {
                     Não tem uma conta? Cadastre-se!
                 </Cadastro>
             </Link>
-        </Login>
+        </Conteiner>
     );
 }
 
-const Login = styled.div`
+const Conteiner = styled.div`
     max-width: 500px;
     min-width: 375px;
     display: flex;
@@ -62,6 +62,11 @@ const Login = styled.div`
         font-size: 69px;
         color: #126BA5;
       }
+
+    img {
+        width: 182px;
+        height: 102px;
+    }
 `;
 
 const Cadastro = styled.div`
