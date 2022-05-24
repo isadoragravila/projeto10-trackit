@@ -1,14 +1,41 @@
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useState } from 'react';
 
 export default function TelaLogin() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [token, setToken] = useState('');
+    let navigate = useNavigate();
+
+    function fazerLogin (event) {
+        event.preventDefault();
+        const body = {
+            email,
+	        password
+        }
+
+        const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", body);
+
+        promise.then(response => {
+            setToken(response.data.token);
+            navigate("/hoje");
+        });
+
+        promise.catch(err => {
+            alert(err.response.data.message);
+        });
+
+    }
+
     return (
         <Login>
             <img src='' alt='logo' />
             <h1>TrackIt</h1>
-            <form>
-                <input type="email" placeholder="email" required />
-                <input type="password" placeholder="senha" required />
+            <form onSubmit={fazerLogin}>
+                <input type="email" placeholder="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="password" placeholder="senha" required value={password} onChange={(e) => setPassword(e.target.value)} />
                 <button type="submit">Entrar</button>
             </form>
             <Link to="/cadastro">
