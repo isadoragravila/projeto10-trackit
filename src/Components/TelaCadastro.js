@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -8,8 +8,11 @@ export default function TelaCadastro() {
     const [name, setName] = useState('');
     const [image, setImage] = useState('');
     const [password, setPassword] = useState('');
+    let navigate = useNavigate();
 
-    function cadastro () {
+    function fazerCadastro (event) {
+        event.preventDefault();
+        
         const body = {
             email,
             name,
@@ -18,12 +21,20 @@ export default function TelaCadastro() {
         }
 
         const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", body);
+
+        promise.then(() => {
+            navigate("/");
+        });
+
+        promise.catch(err => {
+            alert(err.response.data.message);
+        });
     }
     return (
         <Cadastro>
             <img src='' alt='logo' />
             <h1>TrackIt</h1>
-            <form>
+            <form onSubmit={fazerCadastro}>
                 <input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <input type="password" placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <input type="text" placeholder="nome" value={name} onChange={(e) => setName(e.target.value)} />
