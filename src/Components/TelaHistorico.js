@@ -7,7 +7,10 @@ export default function TelaHistorico () {
         <>
             <Topo />
             <Conteiner>
-                <h1>Tela historico</h1>
+                <Content>
+                    <h2>Tela historico</h2>
+                    <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
+                </Content>
             </Conteiner>
             <Menu />
         </>
@@ -21,7 +24,23 @@ const Conteiner = styled.div`
     background-color: #E5E5E5;
     max-width: 500px;
     min-width: 375px;
-    h1 {
-        font-size: 25px;
+    padding: 0 17px;
+`;
+
+const Content = styled.div`
+    padding-top: 28px;
+    h2 {
+        font-family: 'Lexend Deca';
+        font-weight: 400;
+        font-size: 23px;
+        color: #126BA5;
+        margin-bottom: 17px;
+    }
+    p {
+        font-family: 'Lexend Deca';
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 22px;
+        color: #666666;
     }
 `;
