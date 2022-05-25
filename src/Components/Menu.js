@@ -1,11 +1,18 @@
 import styled from 'styled-components';
+import { Link } from "react-router-dom";
 
 export default function Menu () {
     return (
         <Conteiner>
-            <p>Hábitos</p>
-            <p>Hoje</p>
-            <p>Histórico</p>
+            <Link to="/habitos">
+                <p>Hábitos</p>
+            </Link>
+            <Link to="/hoje">
+                <p>Hoje</p>
+            </Link>
+            <Link to="/historico">
+                <p>Histórico</p>
+            </Link>
         </Conteiner>
     );
 }
@@ -21,6 +28,10 @@ const Conteiner = styled.div`
     align-items: center;
     justify-content: space-between;
     padding: 0 31px;
+
+    a {
+        text-decoration: none;
+    }
 
     p {
         font-family: 'Lexend Deca';
