@@ -3,7 +3,31 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useState } from 'react';
 import logo from '../Assets/logo.png';
-import { ThreeDots } from  'react-loader-spinner';
+import { ThreeDots } from 'react-loader-spinner';
+
+function Enabled({email, password, name, image, setEmail, setPassword, setName, setImage}) {
+    return (
+        <>
+            <Input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="password" placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="text" placeholder="nome" value={name} onChange={(e) => setName(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="url" placeholder="foto" value={image} onChange={(e) => setImage(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Button type="submit" opacity={1}>Cadastrar</Button>
+        </>
+    );
+}
+
+function Disabled({email, password, name, image}) {
+    return (
+        <>
+            <Input type="email" disabled placeholder="email" value={email} cor={"#F2F2F2"} letra={"#AFAFAF"} />
+            <Input type="password" disabled placeholder="senha" value={password} cor={"#F2F2F2"} letra={"#AFAFAF"} />
+            <Input type="text" disabled placeholder="nome" value={name} cor={"#F2F2F2"} letra={"#AFAFAF"} />
+            <Input type="url" disabled placeholder="foto" value={image} cor={"#F2F2F2"} letra={"#AFAFAF"} />
+            <Button type="submit" disabled opacity={0.7}>{<ThreeDots color={"#ffffff"} width={51} />}</Button>
+        </>
+    );
+}
 
 export default function TelaCadastro() {
     const [email, setEmail] = useState('');
@@ -13,7 +37,7 @@ export default function TelaCadastro() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    function fazerCadastro (event) {
+    function fazerCadastro(event) {
         event.preventDefault();
         setIsLoading(true);
         const body = { email, name, image, password };
@@ -33,14 +57,10 @@ export default function TelaCadastro() {
             <img src={logo} alt='logo' />
             <h1>TrackIt</h1>
             <Form onSubmit={fazerCadastro}>
-                <Input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} cor={isLoading ? "#F2F2F2" : "#FFFFFF"} />
-                <Input type="password" placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} cor={isLoading ? "#F2F2F2" : "#FFFFFF"} />
-                <Input type="text" placeholder="nome" value={name} onChange={(e) => setName(e.target.value)} cor={isLoading ? "#F2F2F2" : "#FFFFFF"} />
-                <Input type="url" placeholder="foto" value={image} onChange={(e) => setImage(e.target.value)} cor={isLoading ? "#F2F2F2" : "#FFFFFF"} />
                 {isLoading ? (
-                    <Button type="submit" disabled opacity={0.7}>{<ThreeDots color={"#ffffff"} width={51} />}</Button>
-                    ) : (
-                    <Button type="submit" opacity={1}>Cadastrar</Button>
+                <Disabled email={email} password={password} name={name} image={image} />
+                 ) : ( 
+                <Enabled email={email} password={password} name={name} image={image} setEmail={setEmail} setPassword={setPassword} setName={setName} setImage={setImage} />
                 )}
             </Form>
             <Link to="/">
@@ -101,7 +121,7 @@ const Input = styled.input`
     font-weight: 400;
     font-size: 20px;
     text-indent: 10px;
-    color: #AFAFAF;
+    color: ${props => props.letra};
     background-color: ${props => props.cor};
 
     ::placeholder {

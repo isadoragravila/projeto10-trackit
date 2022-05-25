@@ -6,6 +6,26 @@ import logo from '../Assets/logo.png';
 import { ThreeDots } from  'react-loader-spinner';
 import TokenContext from "../Contexts/TokenContext";
 
+function Enabled({email, password, setEmail, setPassword}) {
+    return (
+        <>
+            <Input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="password" placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Button type="submit" opacity={1}>Entrar</Button>
+        </>
+    );
+}
+
+function Disabled({email, password}) {
+    return (
+        <>
+            <Input type="email" disabled placeholder="email" value={email} cor={"#F2F2F2"} letra={"#AFAFAF"} />
+            <Input type="password" disabled placeholder="senha" value={password} cor={"#F2F2F2"} letra={"#AFAFAF"} />
+            <Button type="submit" disabled opacity={0.7}>{<ThreeDots color={"#ffffff"} width={51} />}</Button>
+        </>
+    );
+}
+
 export default function TelaLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -34,12 +54,10 @@ export default function TelaLogin() {
             <img src={logo} alt='logo' />
             <h1>TrackIt</h1>
             <Form onSubmit={fazerLogin}>
-                <Input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} cor={isLoading ? "#F2F2F2" : "#FFFFFF"} />
-                <Input type="password" placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} cor={isLoading ? "#F2F2F2" : "#FFFFFF"} />
                 {isLoading ? (
-                    <Button type="submit" disabled opacity={0.7}>{<ThreeDots color={"#ffffff"} width={51} />}</Button>
-                    ) : (
-                    <Button type="submit" opacity={1}>Entrar</Button>
+                <Disabled email={email} password={password} />
+                 ) : ( 
+                <Enabled email={email} password={password} setEmail={setEmail} setPassword={setPassword} />
                 )}
             </Form>
             <Link to="/cadastro">
@@ -100,7 +118,7 @@ const Input = styled.input`
     font-weight: 400;
     font-size: 20px;
     text-indent: 10px;
-    color: #AFAFAF;
+    color: ${props => props.letra};
     background-color: ${props => props.cor};
 
     ::placeholder {
