@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Menu from './Menu';
 import Topo from "./Topo";
 
-function Box({ index, dia, ids, setIds }) {
+function Box ({ index, dia, ids, setIds }) {
     const [isChecked, setIsChecked] = useState(marcado);
 
     function marcado () {
@@ -31,7 +31,7 @@ function Box({ index, dia, ids, setIds }) {
     );
 }
 
-function CriarHabitos({ setClicked, habito, setHabito, ids, setIds }) {
+function CriarHabitos ({ setClicked, habito, setHabito, ids, setIds }) {
     const week = ["D", "S", "T", "Q", "Q", "S", "S"];
 
     function enviar () {
@@ -58,10 +58,49 @@ function CriarHabitos({ setClicked, habito, setHabito, ids, setIds }) {
     );
 }
 
+function Box2 ({ index, dia, days }) {
+    const [isChecked, setIsChecked] = useState(marcado);
+
+    function marcado () {
+        for (let i = 0; i < days.length; i++) {
+            if(index === days[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    return (
+        <Checkbox cor={isChecked ? "#FFFFFF" : "#CFCFCF"} letra={isChecked ? "#DBDBDB" : "#FFFFFF" }>
+            {dia}
+        </Checkbox>
+    );
+}
+
+function Habitos ({ days }) {
+    const week = ["D", "S", "T", "Q", "Q", "S", "S"];
+
+    function excluir () {
+        console.log("exclui");
+    }
+    
+    return (
+        <Habito>
+            <ion-icon name="trash-outline" onClick={excluir}></ion-icon>
+            <h3>Nome do hábito</h3>
+            <Semana>
+                {week.map((dia, index) => <Box2 key={index} index={index} dia={dia} days={days} />)}
+            </Semana>
+        </Habito>
+    );
+}
+
 export default function TelaHabitos() {
     const [clicked, setClicked] = useState(false);
     const [habito, setHabito] = useState("");
     const [ids, setIds] = useState([]);
+    const teste = [];
+    const days = [2, 3, 5];
 
     return (
         <>
@@ -73,7 +112,7 @@ export default function TelaHabitos() {
                         <Botao onClick={() => setClicked(true)}>+</Botao>
                     </Titulo>
                     {clicked ? <CriarHabitos setClicked={setClicked} habito={habito} setHabito={setHabito} ids={ids} setIds={setIds} /> : null}
-                    <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
+                    {teste.length === 0 ? <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p> : <Habitos days={days} />}
                 </Content>
             </Conteiner>
             <Menu />
@@ -220,4 +259,30 @@ const Cancelar = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const Habito = styled.div`
+    width: 100%;
+    height: 91px;
+    margin-bottom: 10px;
+    padding: 15px;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    position: relative;
+
+    h3 {
+        font-family: 'Lexend Deca';
+        font-weight: 400;
+        color: #666666;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    ion-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #666666;
+        font-size: 20px;
+    }
 `;
