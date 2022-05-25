@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import logo from '../Assets/logo.png';
 import { ThreeDots } from  'react-loader-spinner';
+import TokenContext from "../Contexts/TokenContext";
 
 export default function TelaLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [token, setToken] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const {setToken} = useContext(TokenContext);
 
     function fazerLogin (event) {
         event.preventDefault();
