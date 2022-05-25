@@ -8,13 +8,12 @@ export default function TelaHistorico () {
             <Topo />
             <Conteiner>
                 <Content>
-                    <h2>Tela historico</h2>
+                    <h2>Histórico</h2>
                     <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
                 </Content>
             </Conteiner>
             <Menu />
         </>
-
     );
 }
 
@@ -33,8 +32,9 @@ const Content = styled.div`
         font-family: 'Lexend Deca';
         font-weight: 400;
         font-size: 23px;
+        line-height: 35px;
         color: #126BA5;
-        margin-bottom: 17px;
+        margin-bottom: 28px;
     }
     p {
         font-family: 'Lexend Deca';
