@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import Menu from './Menu';
 import Topo from "./Topo";
+import { ThreeDots } from  'react-loader-spinner';
+import TokenContext from "../Contexts/TokenContext";
 
 function Box ({ index, dia, ids, setIds }) {
     const [isChecked, setIsChecked] = useState(marcado);
@@ -31,29 +34,70 @@ function Box ({ index, dia, ids, setIds }) {
     );
 }
 
-function CriarHabitos ({ setClicked, habito, setHabito, ids, setIds }) {
+function CriarHabitos ({ setClicked, habito, setHabito, ids, setIds, token, setMeusHabitos }) {
     const week = ["D", "S", "T", "Q", "Q", "S", "S"];
+    const [isLoading, setIsLoading] = useState(false);
 
     function enviar () {
-        setClicked(false);
-        setHabito("");
-        setIds([]);
+        setIsLoading(true);
+        const body = { name: habito, days: ids };
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+        const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", body, config);
+
+        promise.then(() => {
+            setClicked(false);
+            setHabito("");
+            setIds([]);
+            setIsLoading(false);
+            getHabitos();
+        });
+        promise.catch(err => {
+            alert(err.response.data.message);
+            setIsLoading(false);
+        });
     }
 
     function cancelar () {
         setClicked(false);
     }
 
+    function getHabitos () {
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
+        promise.then(response => {
+            setMeusHabitos(response.data);
+        });
+    }
+
     return (
         <CriarHabito>
-            <Input type="text" placeholder="nome do hábito" value={habito} onChange={(e) => setHabito(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            {isLoading ? (
+                <Input type="text" disabled placeholder="nome do hábito" value={habito} cor={"#F2F2F2"} letra={"#AFAFAF"} />
+            ) : (
+                <Input type="text" placeholder="nome do hábito" value={habito} onChange={(e) => setHabito(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            )}
             <Semana>
                 {week.map((dia, index) => <Box key={index} index={index} dia={dia} ids={ids} setIds={setIds} />)}
             </Semana>
-            <Botoes>
-                <Cancelar onClick={cancelar}>Cancelar</Cancelar>
-                <Enviar onClick={enviar}>Enviar</Enviar>
-            </Botoes>
+            {isLoading ? (
+                <Botoes>
+                    <Cancelar opacity={0.7} disabled onClick={cancelar}>Cancelar</Cancelar>
+                    <Enviar opacity={0.7} disabled onClick={enviar}>{<ThreeDots color={"#ffffff"} width={43} />}</Enviar>
+                </Botoes>
+            ) : (
+                <Botoes>
+                    <Cancelar opacity={1} onClick={cancelar}>Cancelar</Cancelar>
+                    <Enviar opacity={1} onClick={enviar}>Enviar</Enviar>
+                </Botoes>
+            )}
         </CriarHabito>
     );
 }
@@ -77,7 +121,7 @@ function Box2 ({ index, dia, days }) {
     );
 }
 
-function Habitos ({ days }) {
+function Habitos ({ name, days }) {
     const week = ["D", "S", "T", "Q", "Q", "S", "S"];
 
     function excluir () {
@@ -87,7 +131,7 @@ function Habitos ({ days }) {
     return (
         <Habito>
             <ion-icon name="trash-outline" onClick={excluir}></ion-icon>
-            <h3>Nome do hábito</h3>
+            <h3>{name}</h3>
             <Semana>
                 {week.map((dia, index) => <Box2 key={index} index={index} dia={dia} days={days} />)}
             </Semana>
@@ -99,8 +143,20 @@ export default function TelaHabitos() {
     const [clicked, setClicked] = useState(false);
     const [habito, setHabito] = useState("");
     const [ids, setIds] = useState([]);
-    const teste = [];
-    const days = [2, 3, 5];
+    const [meusHabitos, setMeusHabitos] = useState([]);
+    const {token} = useContext(TokenContext);
+
+    useEffect(() => {
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
+        promise.then(response => {
+            setMeusHabitos(response.data);
+        });
+    }, []);
 
     return (
         <>
@@ -111,8 +167,12 @@ export default function TelaHabitos() {
                         <h2>Meus hábitos</h2>
                         <Botao onClick={() => setClicked(true)}>+</Botao>
                     </Titulo>
-                    {clicked ? <CriarHabitos setClicked={setClicked} habito={habito} setHabito={setHabito} ids={ids} setIds={setIds} /> : null}
-                    {teste.length === 0 ? <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p> : <Habitos days={days} />}
+                    {clicked ? <CriarHabitos setClicked={setClicked} habito={habito} setHabito={setHabito} ids={ids} setIds={setIds} token={token} setMeusHabitos={setMeusHabitos} /> : null}
+                    {meusHabitos.length === 0 ? 
+                    (<p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
+                    ) : (
+                    meusHabitos.map(item => <Habitos key={item.id} name={item.name} days={item.days} />)
+                    )}
                 </Content>
             </Conteiner>
             <Menu />
