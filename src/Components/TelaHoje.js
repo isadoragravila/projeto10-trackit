@@ -1,8 +1,9 @@
+import dayjs from 'dayjs';
+import locale from 'dayjs/locale/pt-br';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Menu from './Menu';
 import Topo from "./Topo";
-
 
 function Habitos({ habito }) {
     const [recorde, setRecorde] = useState(false);
@@ -36,9 +37,7 @@ function Habitos({ habito }) {
     );
 }
 export default function TelaHoje() {
-    const dayjs = require('dayjs');
-    let now = dayjs().locale("pt-br");
-    console.log(now);
+    const now = dayjs().locale("pt-br");
 
     const habitos = [
         {id: 1, name: "Acordar", done: false, currentSequence: 1, highestSequence: 3 },
