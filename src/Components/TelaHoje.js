@@ -14,7 +14,7 @@ function Habitos({ habito, token, setHabitos }) {
     useEffect(() => {
         if (habito.currentSequence === habito.highestSequence && habito.done) {
             setRecorde(true);
-        } else  {
+        } else {
             setRecorde(false);
         }
         if (habito.done) {
@@ -24,13 +24,12 @@ function Habitos({ habito, token, setHabitos }) {
         }
     }, [habito]);
 
-    function click () {
+    function click() {
         const config = {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         };
-
         if (check) {
             const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habito.id}/uncheck`, null, config);
 
@@ -50,7 +49,6 @@ function Habitos({ habito, token, setHabitos }) {
                 alert(err.response.data.message);
             });
         }
-        
     }
 
     function getHabitos() {
@@ -69,22 +67,35 @@ function Habitos({ habito, token, setHabitos }) {
     }
 
     return (
-        <>
             <Habito>
                 <Texto>
                     <h3>{habito.name}</h3>
                     <Sequencia cor={habito.done ? "#8FC549" : "#666666"}>
-                    Sequência atual: <span>{habito.currentSequence} dias</span>
+                        Sequência atual: <span>{habito.currentSequence} dias</span>
                     </Sequencia>
                     <Recorde cor={recorde ? "#8FC549" : "#666666"}>
-                    Seu recorde: <span>{habito.highestSequence} dias</span>
+                        Seu recorde: <span>{habito.highestSequence} dias</span>
                     </Recorde>
                 </Texto>
                 <Check onClick={click} cor={habito.done ? "#8FC549" : "#EBEBEB"}>
                     <ion-icon name="checkmark"></ion-icon>
                 </Check>
             </Habito>
-        </>
+    );
+}
+
+function Progresso({habitos}) {
+    const concluidos = habitos.filter(habito => habito.done === true);
+    const porcentagem = Math.ceil((concluidos.length)/(habitos.length)*100);
+
+    return (
+        <Subtitulo cor={concluidos.length === 0 ? "#BABABA" : "#8FC549"}>
+            {concluidos.length === 0 ? (
+                <p>Nenhum hábito concluído ainda</p>
+            ) : (
+                <p>{porcentagem}% dos hábitos concluídos</p>
+            )}
+        </Subtitulo>
     );
 }
 
@@ -114,13 +125,12 @@ export default function TelaHoje() {
             <Conteiner>
                 <Content>
                     <h2>{now.format("dddd, D/MM")}</h2>
-                    <p>Nenhum hábito concluído ainda</p>
+                    <Progresso habitos={habitos} />
                 </Content>
                 {habitos.map((habito) => <Habitos key={habito.id} habito={habito} token={token} setHabitos={setHabitos} />)}
             </Conteiner>
             <Menu />
         </>
-
     );
 }
 
@@ -144,13 +154,16 @@ const Content = styled.div`
         line-height: 35px;
         color: #126BA5;
     }
+`;
+
+const Subtitulo = styled.div`
     p {
-        font-family: 'Lexend Deca';
-        font-weight: 400;
-        font-size: 18px;
-        line-height: 22px;
-        color: #bababa;
-    }
+            font-family: 'Lexend Deca';
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 22px;
+            color: ${props => props.cor};
+        }
 `;
 
 const Habito = styled.div`
