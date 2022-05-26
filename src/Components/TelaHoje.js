@@ -68,31 +68,33 @@ function Habitos({ habito, token, setHabitos }) {
     }
 
     return (
-            <Habito>
-                <Texto>
-                    <h3>{habito.name}</h3>
-                    <Sequencia cor={habito.done ? "#8FC549" : "#666666"}>
-                        Sequência atual: <span>{habito.currentSequence} dias</span>
-                    </Sequencia>
-                    <Recorde cor={recorde ? "#8FC549" : "#666666"}>
-                        Seu recorde: <span>{habito.highestSequence} dias</span>
-                    </Recorde>
-                </Texto>
-                <Check onClick={click} cor={habito.done ? "#8FC549" : "#EBEBEB"}>
-                    <ion-icon name="checkmark"></ion-icon>
-                </Check>
-            </Habito>
+        <Habito>
+            <Texto>
+                <h3>{habito.name}</h3>
+                <Sequencia cor={habito.done ? "#8FC549" : "#666666"}>
+                    Sequência atual: <span>{habito.currentSequence} dias</span>
+                </Sequencia>
+                <Recorde cor={recorde ? "#8FC549" : "#666666"}>
+                    Seu recorde: <span>{habito.highestSequence} dias</span>
+                </Recorde>
+            </Texto>
+            <Check onClick={click} cor={habito.done ? "#8FC549" : "#EBEBEB"}>
+                <ion-icon name="checkmark"></ion-icon>
+            </Check>
+        </Habito>
     );
 }
 
-function Progresso({habitos}) {
+function Progresso({ habitos }) {
     const concluidos = habitos.filter(habito => habito.done === true);
-    const porcentagem = Math.ceil((concluidos.length)/(habitos.length)*100);
-    const {setPercentual} = useContext(PercentualContext);
+    const porcentagem = Math.ceil((concluidos.length) / (habitos.length) * 100);
+    const { setPercentual } = useContext(PercentualContext);
 
-    useEffect(() => {
+    if (habitos.length !== 0) {
         setPercentual(porcentagem);
-    }, [porcentagem]);
+    } else {
+        setPercentual(0);
+    }
 
     return (
         <Subtitulo cor={concluidos.length === 0 ? "#BABABA" : "#8FC549"}>
