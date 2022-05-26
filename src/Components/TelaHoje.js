@@ -1,21 +1,72 @@
 import dayjs from 'dayjs';
 import locale from 'dayjs/locale/pt-br';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import Menu from './Menu';
 import Topo from "./Topo";
+import TokenContext from "../Contexts/TokenContext";
 
-function Habitos({ habito }) {
+function Habitos({ habito, token, setHabitos }) {
     const [recorde, setRecorde] = useState(false);
+    const [check, setCheck] = useState(false);
+
+    useEffect(() => {
+        if (habito.currentSequence === habito.highestSequence && habito.done) {
+            setRecorde(true);
+        } else  {
+            setRecorde(false);
+        }
+        if (habito.done) {
+            setCheck(true);
+        } else {
+            setCheck(false);
+        }
+    }, [habito]);
+
     function click () {
-        console.log("clicou");
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+
+        if (check) {
+            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habito.id}/uncheck`, null, config);
+
+            promise.then(() => {
+                getHabitos();
+            });
+            promise.catch(err => {
+                alert(err.response.data.message);
+            });
+        } else {
+            const promise = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habito.id}/check`, null, config);
+
+            promise.then(() => {
+                getHabitos();
+            });
+            promise.catch(err => {
+                alert(err.response.data.message);
+            });
+        }
         
     }
-    useEffect(() => {
-        if (habito.currentSequence === habito.highestSequence) {
-            setRecorde(true);
-        }
-    }, []);
+
+    function getHabitos() {
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
+        promise.then(response => {
+            setHabitos(response.data);
+        });
+        promise.catch(err => {
+            alert(err.response.data.message);
+        });
+    }
 
     return (
         <>
@@ -36,14 +87,26 @@ function Habitos({ habito }) {
         </>
     );
 }
+
 export default function TelaHoje() {
     const now = dayjs().locale("pt-br");
+    const { token } = useContext(TokenContext);
+    const [habitos, setHabitos] = useState([]);
 
-    const habitos = [
-        {id: 1, name: "Acordar", done: false, currentSequence: 1, highestSequence: 3 },
-        {id: 2, name: "Comer", done: true, currentSequence: 2, highestSequence: 3 },
-        {id: 3, name: "Dormir", done: true, currentSequence: 3, highestSequence: 3 }
-    ];
+    useEffect(() => {
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
+        promise.then(response => {
+            setHabitos(response.data);
+        });
+        promise.catch(err => {
+            alert(err.response.data.message);
+        });
+    }, []);
 
     return (
         <>
@@ -53,7 +116,7 @@ export default function TelaHoje() {
                     <h2>{now.format("dddd, D/MM")}</h2>
                     <p>Nenhum hábito concluído ainda</p>
                 </Content>
-                {habitos.map((habito) => <Habitos key={habito.id} habito={habito} />)}
+                {habitos.map((habito) => <Habitos key={habito.id} habito={habito} token={token} setHabitos={setHabitos} />)}
             </Conteiner>
             <Menu />
         </>
