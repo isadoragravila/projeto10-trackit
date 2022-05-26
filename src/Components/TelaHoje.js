@@ -63,7 +63,8 @@ export default function TelaHoje() {
 
 const Conteiner = styled.div`
     margin-top: 70px;
-    height: 100vh;
+    min-height: 100vh;
+    margin-bottom: 70px;
     background-color: #E5E5E5;
     max-width: 500px;
     min-width: 375px;

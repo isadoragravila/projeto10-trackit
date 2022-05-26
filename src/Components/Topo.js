@@ -21,6 +21,7 @@ const Conteiner = styled.div`
     align-items: center;
     justify-content: space-between;
     padding: 0 18px;
+    z-index: 1;
 
     h1 {
         font-family: 'Playball';

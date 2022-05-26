@@ -3,15 +3,15 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Menu from './Menu';
 import Topo from "./Topo";
-import { ThreeDots } from  'react-loader-spinner';
+import { ThreeDots } from 'react-loader-spinner';
 import TokenContext from "../Contexts/TokenContext";
 
-function Box ({ index, dia, ids, setIds }) {
+function Box({ index, dia, ids, setIds, isLoading }) {
     const [isChecked, setIsChecked] = useState(marcado);
 
-    function marcado () {
+    function marcado() {
         for (let i = 0; i < ids.length; i++) {
-            if(index === ids[i]) {
+            if (index === ids[i]) {
                 return false;
             }
         }
@@ -22,23 +22,31 @@ function Box ({ index, dia, ids, setIds }) {
         setIsChecked(!isChecked);
         if (isChecked) {
             setIds([...ids, index]);
-          } else {
+        } else {
             setIds(ids.filter((item) => item !== index));
-          }
+        }
     }
 
     return (
-        <Checkbox cor={isChecked ? "#FFFFFF" : "#CFCFCF"} letra={isChecked ? "#DBDBDB" : "#FFFFFF" } onClick={mudaCor}>
-            {dia}
-        </Checkbox>
+        <>
+            {isLoading ? (
+                <Checkbox disabled cor={isChecked ? "#FFFFFF" : "#CFCFCF"} letra={isChecked ? "#DBDBDB" : "#FFFFFF"}>
+                    {dia}
+                </Checkbox>
+            ) : (
+                <Checkbox cor={isChecked ? "#FFFFFF" : "#CFCFCF"} letra={isChecked ? "#DBDBDB" : "#FFFFFF"} onClick={mudaCor}>
+                    {dia}
+                </Checkbox>
+            )}
+        </>
     );
 }
 
-function CriarHabitos ({ setClicked, habito, setHabito, ids, setIds, token, setMeusHabitos }) {
+function CriarHabitos({ setClicked, habito, setHabito, ids, setIds, token, setMeusHabitos }) {
     const week = ["D", "S", "T", "Q", "Q", "S", "S"];
     const [isLoading, setIsLoading] = useState(false);
 
-    function enviar () {
+    function enviar() {
         setIsLoading(true);
         const body = { name: habito, days: ids };
         const config = {
@@ -61,11 +69,11 @@ function CriarHabitos ({ setClicked, habito, setHabito, ids, setIds, token, setM
         });
     }
 
-    function cancelar () {
+    function cancelar() {
         setClicked(false);
     }
 
-    function getHabitos () {
+    function getHabitos() {
         const config = {
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -85,16 +93,16 @@ function CriarHabitos ({ setClicked, habito, setHabito, ids, setIds, token, setM
                 <Input type="text" placeholder="nome do hábito" value={habito} onChange={(e) => setHabito(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
             )}
             <Semana>
-                {week.map((dia, index) => <Box key={index} index={index} dia={dia} ids={ids} setIds={setIds} />)}
+                {week.map((dia, index) => <Box key={index} index={index} dia={dia} ids={ids} setIds={setIds} isLoading={isLoading} />)}
             </Semana>
             {isLoading ? (
                 <Botoes>
-                    <Cancelar opacity={0.7} disabled onClick={cancelar}>Cancelar</Cancelar>
-                    <Enviar opacity={0.7} disabled onClick={enviar}>{<ThreeDots color={"#ffffff"} width={43} />}</Enviar>
+                    <Cancelar opacity={0.7} disabled>Cancelar</Cancelar>
+                    <Enviar opacity={0.7} disabled>{<ThreeDots color={"#ffffff"} width={43} />}</Enviar>
                 </Botoes>
             ) : (
                 <Botoes>
-                    <Cancelar opacity={1} onClick={cancelar}>Cancelar</Cancelar>
+                    <Cancelar opacity={1} onClick={()=> setClicked(false)}>Cancelar</Cancelar>
                     <Enviar opacity={1} onClick={enviar}>Enviar</Enviar>
                 </Botoes>
             )}
@@ -102,12 +110,12 @@ function CriarHabitos ({ setClicked, habito, setHabito, ids, setIds, token, setM
     );
 }
 
-function Box2 ({ index, dia, days }) {
+function Box2({ index, dia, days }) {
     const [isChecked, setIsChecked] = useState(marcado);
 
-    function marcado () {
+    function marcado() {
         for (let i = 0; i < days.length; i++) {
-            if(index === days[i]) {
+            if (index === days[i]) {
                 return false;
             }
         }
@@ -115,19 +123,19 @@ function Box2 ({ index, dia, days }) {
     }
 
     return (
-        <Checkbox cor={isChecked ? "#FFFFFF" : "#CFCFCF"} letra={isChecked ? "#DBDBDB" : "#FFFFFF" }>
+        <Checkbox cor={isChecked ? "#FFFFFF" : "#CFCFCF"} letra={isChecked ? "#DBDBDB" : "#FFFFFF"}>
             {dia}
         </Checkbox>
     );
 }
 
-function Habitos ({ name, days }) {
+function Habitos({ name, days }) {
     const week = ["D", "S", "T", "Q", "Q", "S", "S"];
 
-    function excluir () {
+    function excluir() {
         console.log("exclui");
     }
-    
+
     return (
         <Habito>
             <ion-icon name="trash-outline" onClick={excluir}></ion-icon>
@@ -144,7 +152,7 @@ export default function TelaHabitos() {
     const [habito, setHabito] = useState("");
     const [ids, setIds] = useState([]);
     const [meusHabitos, setMeusHabitos] = useState([]);
-    const {token} = useContext(TokenContext);
+    const { token } = useContext(TokenContext);
 
     useEffect(() => {
         const config = {
@@ -168,11 +176,11 @@ export default function TelaHabitos() {
                         <Botao onClick={() => setClicked(true)}>+</Botao>
                     </Titulo>
                     {clicked ? <CriarHabitos setClicked={setClicked} habito={habito} setHabito={setHabito} ids={ids} setIds={setIds} token={token} setMeusHabitos={setMeusHabitos} /> : null}
-                    {meusHabitos.length === 0 ? 
-                    (<p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
-                    ) : (
-                    meusHabitos.map(item => <Habitos key={item.id} name={item.name} days={item.days} />)
-                    )}
+                    {meusHabitos.length === 0 ?
+                        (<p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
+                        ) : (
+                            meusHabitos.map(item => <Habitos key={item.id} name={item.name} days={item.days} />)
+                        )}
                 </Content>
             </Conteiner>
             <Menu />
@@ -182,7 +190,8 @@ export default function TelaHabitos() {
 
 const Conteiner = styled.div`
     margin-top: 70px;
-    height: 100vh;
+    min-height: 100vh;
+    margin-bottom: 70px;
     background-color: #E5E5E5;
     max-width: 500px;
     min-width: 375px;
@@ -264,7 +273,7 @@ const Semana = styled.div`
     margin-bottom: 29px;
 `;
 
-const Checkbox = styled.div`
+const Checkbox = styled.button`
     width: 30px;
     height: 30px;
     margin-right: 4px;
@@ -274,6 +283,7 @@ const Checkbox = styled.div`
     font-family: 'Lexend Deca';
     font-weight: 400;
     font-size: 20px;
+    line-height: 22px;
     color: ${props => props.letra};
     display: flex;
     align-items: center;
