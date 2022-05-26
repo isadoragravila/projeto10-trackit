@@ -167,6 +167,7 @@ const Habito = styled.div`
 
 const Texto = styled.div`
     min-height: 94px;
+    width: calc(100% - 75px);
     padding: 13px 0 17px 0;
     display: flex;
     flex-direction: column;
@@ -177,6 +178,7 @@ const Texto = styled.div`
         color: #666666;
         font-size: 20px;
         line-height: 25px;
+        word-break: break-word;
     }
 `;
 
@@ -211,6 +213,7 @@ const Check = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
     ion-icon {
         font-size: 55px;
         color: #FFFFFF;

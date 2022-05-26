@@ -295,7 +295,6 @@ const Input = styled.input`
 
 const Semana = styled.div`
     display: flex;
-    
 `;
 
 const Checkbox = styled.button`
