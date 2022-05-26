@@ -69,10 +69,6 @@ function CriarHabitos({ setClicked, habito, setHabito, ids, setIds, token, setMe
         });
     }
 
-    function cancelar() {
-        setClicked(false);
-    }
-
     function getHabitos() {
         const config = {
             headers: {
@@ -102,7 +98,7 @@ function CriarHabitos({ setClicked, habito, setHabito, ids, setIds, token, setMe
                 </Botoes>
             ) : (
                 <Botoes>
-                    <Cancelar opacity={1} onClick={()=> setClicked(false)}>Cancelar</Cancelar>
+                    <Cancelar opacity={1} onClick={() => setClicked(false)}>Cancelar</Cancelar>
                     <Enviar opacity={1} onClick={enviar}>Enviar</Enviar>
                 </Botoes>
             )}
@@ -129,11 +125,40 @@ function Box2({ index, dia, days }) {
     );
 }
 
-function Habitos({ name, days }) {
+function Habitos({ name, days, id, token, setMeusHabitos }) {
     const week = ["D", "S", "T", "Q", "Q", "S", "S"];
 
     function excluir() {
-        console.log("exclui");
+        const confirmBox = window.confirm(
+            "Você tem certeza que deseja excluir esse hábito?"
+        )
+        if (confirmBox === true) {
+            console.log("excluído");
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            };
+            const promise = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config);
+            promise.then(() => {
+                getHabitos();
+            });
+            promise.catch(err => {
+                alert(err.response.data.message);
+            });
+        }
+    }
+
+    function getHabitos() {
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
+        promise.then(response => {
+            setMeusHabitos(response.data);
+        });
     }
 
     return (
@@ -179,7 +204,7 @@ export default function TelaHabitos() {
                     {meusHabitos.length === 0 ?
                         (<p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
                         ) : (
-                            meusHabitos.map(item => <Habitos key={item.id} name={item.name} days={item.days} />)
+                            meusHabitos.map(item => <Habitos key={item.id} name={item.name} days={item.days} id={item.id} token={token} setMeusHabitos={setMeusHabitos} />)
                         )}
                 </Content>
             </Conteiner>
@@ -270,7 +295,7 @@ const Input = styled.input`
 
 const Semana = styled.div`
     display: flex;
-    margin-bottom: 29px;
+    
 `;
 
 const Checkbox = styled.button`
@@ -279,7 +304,6 @@ const Checkbox = styled.button`
     margin-right: 4px;
     border: 1px solid #D5D5D5;
     border-radius: 5px;
-    cursor: pointer;
     font-family: 'Lexend Deca';
     font-weight: 400;
     font-size: 20px;
@@ -294,6 +318,7 @@ const Checkbox = styled.button`
 const Botoes = styled.div`
     display: flex;
     justify-content: flex-end;
+    margin-top: 29px;
 `;
 
 const Enviar = styled.button`
@@ -333,7 +358,7 @@ const Cancelar = styled.button`
 
 const Habito = styled.div`
     width: 100%;
-    height: 91px;
+    min-height: 91px;
     margin-bottom: 10px;
     padding: 15px;
     background-color: #FFFFFF;
@@ -346,6 +371,8 @@ const Habito = styled.div`
         color: #666666;
         font-size: 20px;
         margin-bottom: 10px;
+        word-break: break-word;
+        width: calc(100% - 20px);
     }
 
     ion-icon {
