@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Menu from './Menu';
 import Topo from "./Topo";
 import TokenContext from "../Contexts/TokenContext";
+import PercentualContext from "../Contexts/PercentualContext";
 
 function Habitos({ habito, token, setHabitos }) {
     const [recorde, setRecorde] = useState(false);
@@ -87,6 +88,11 @@ function Habitos({ habito, token, setHabitos }) {
 function Progresso({habitos}) {
     const concluidos = habitos.filter(habito => habito.done === true);
     const porcentagem = Math.ceil((concluidos.length)/(habitos.length)*100);
+    const {setPercentual} = useContext(PercentualContext);
+
+    useEffect(() => {
+        setPercentual(porcentagem);
+    }, [porcentagem]);
 
     return (
         <Subtitulo cor={concluidos.length === 0 ? "#BABABA" : "#8FC549"}>

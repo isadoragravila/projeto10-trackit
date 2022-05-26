@@ -133,7 +133,6 @@ function Habitos({ name, days, id, token, setMeusHabitos }) {
             "Você tem certeza que deseja excluir esse hábito?"
         )
         if (confirmBox === true) {
-            console.log("excluído");
             const config = {
                 headers: {
                     "Authorization": `Bearer ${token}`
