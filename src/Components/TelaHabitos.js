@@ -380,5 +380,6 @@ const Habito = styled.div`
         right: 10px;
         color: #666666;
         font-size: 20px;
+        cursor: pointer;
     }
 `;

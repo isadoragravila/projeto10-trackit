@@ -8,10 +8,10 @@ import { ThreeDots } from 'react-loader-spinner';
 function Enabled({email, password, name, image, setEmail, setPassword, setName, setImage}) {
     return (
         <>
-            <Input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
-            <Input type="password" placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
-            <Input type="text" placeholder="nome" value={name} onChange={(e) => setName(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
-            <Input type="url" placeholder="foto" value={image} onChange={(e) => setImage(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="email" required placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="password" required placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="text" required placeholder="nome" value={name} onChange={(e) => setName(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="url" required placeholder="foto" value={image} onChange={(e) => setImage(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
             <Button type="submit" opacity={1}>Cadastrar</Button>
         </>
     );
@@ -91,6 +91,9 @@ const Conteiner = styled.div`
     img {
         width: 182px;
         height: 102px;
+    }
+    a {
+        text-decoration: none;
     }
 `;
 

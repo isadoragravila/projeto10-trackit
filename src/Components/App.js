@@ -8,12 +8,15 @@ import TelaHabitos from "./TelaHabitos";
 import TelaHoje from "./TelaHoje";
 import TelaHistorico from "./TelaHistorico";
 import TokenContext from "../Contexts/TokenContext";
+import ImgContext from "../Contexts/ImgContext";
 
 export default function App() {
   const [token, setToken] = useState('');
+  const [img, setImg] = useState('');
 
   return (
     <TokenContext.Provider value={{ token, setToken }}>
+      <ImgContext.Provider value={{ img, setImg }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<TelaLogin />} />
@@ -23,6 +26,7 @@ export default function App() {
           <Route path="/historico" element={<TelaHistorico />} />
         </Routes>
       </BrowserRouter>
+      </ImgContext.Provider>
     </TokenContext.Provider>
   );
 }

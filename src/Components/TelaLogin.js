@@ -5,12 +5,13 @@ import { useState, useContext } from 'react';
 import logo from '../Assets/logo.png';
 import { ThreeDots } from  'react-loader-spinner';
 import TokenContext from "../Contexts/TokenContext";
+import ImgContext from "../Contexts/ImgContext";
 
 function Enabled({email, password, setEmail, setPassword}) {
     return (
         <>
-            <Input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
-            <Input type="password" placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="email" required placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
+            <Input type="password" required placeholder="senha" value={password} onChange={(e) => setPassword(e.target.value)} cor={"#FFFFFF"} letra={"#666666"} />
             <Button type="submit" opacity={1}>Entrar</Button>
         </>
     );
@@ -32,6 +33,7 @@ export default function TelaLogin() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const {setToken} = useContext(TokenContext);
+    const {setImg} = useContext(ImgContext);
 
     function fazerLogin (event) {
         event.preventDefault();
@@ -41,6 +43,7 @@ export default function TelaLogin() {
 
         promise.then(response => {
             setToken(response.data.token);
+            setImg(response.data.image);
             navigate("/hoje");
         });
         promise.catch(err => {
@@ -88,6 +91,9 @@ const Conteiner = styled.div`
     img {
         width: 182px;
         height: 102px;
+    }
+    a {
+        text-decoration: none;
     }
 `;
 

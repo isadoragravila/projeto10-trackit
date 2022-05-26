@@ -1,10 +1,14 @@
 import styled from 'styled-components';
+import { useContext } from 'react';
+import ImgContext from "../Contexts/ImgContext";
 
 export default function Topo () {
+    const { img } = useContext(ImgContext);
+
     return (
         <Conteiner>
             <h1>TrackIt</h1>
-            <img src="https://cinemacao.com/wp-content/uploads/2016/12/bob-esponja-3-1130x590.jpg" alt="usuario" />
+            <img src={img} alt="usuario" />
         </Conteiner>
     );
 }
