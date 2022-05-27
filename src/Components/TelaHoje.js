@@ -1,32 +1,38 @@
 import dayjs from 'dayjs';
 import locale from 'dayjs/locale/pt-br';
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import styled from 'styled-components';
 import Menu from './Menu';
 import Topo from "./Topo";
 import HabitosHoje from './HabitosHoje';
-import Progresso from './Progresso'; 
+import Progresso from './Progresso';
 import TokenContext from "../Contexts/TokenContext";
 
 export default function TelaHoje() {
     const now = dayjs().locale("pt-br");
+    const navigate = useNavigate();
     const { token } = useContext(TokenContext);
     const [habitos, setHabitos] = useState([]);
 
     useEffect(() => {
-        const config = {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        };
-        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
-        promise.then(response => {
-            setHabitos(response.data);
-        });
-        promise.catch(err => {
-            alert(err.response.data.message);
-        });
+        if (!token) {
+            navigate("/");
+        } else {
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            };
+            const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", config);
+            promise.then(response => {
+                setHabitos(response.data);
+            });
+            promise.catch(err => {
+                alert(err.response.data.message);
+            });
+        }
     }, []);
 
     return (

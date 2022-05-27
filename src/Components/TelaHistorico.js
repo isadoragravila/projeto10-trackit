@@ -1,8 +1,20 @@
+import { useEffect, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import Menu from './Menu';
 import Topo from "./Topo";
+import TokenContext from "../Contexts/TokenContext";
 
 export default function TelaHistorico () {
+    const navigate = useNavigate();
+    const { token } = useContext(TokenContext);
+    
+    useEffect(() => {
+        if (!token) {
+            navigate("/");
+        }
+    }, []);
+
     return (
         <>
             <Topo />

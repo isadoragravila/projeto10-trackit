@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import axios from 'axios';
 import Menu from './Menu';
@@ -8,6 +9,7 @@ import CriarHabitos from './CriarHabitos';
 import TokenContext from "../Contexts/TokenContext";
 
 export default function TelaHabitos() {
+    const navigate = useNavigate();
     const [clicked, setClicked] = useState(false);
     const [habito, setHabito] = useState("");
     const [ids, setIds] = useState([]);
@@ -15,15 +17,20 @@ export default function TelaHabitos() {
     const { token } = useContext(TokenContext);
 
     useEffect(() => {
-        const config = {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        };
-        const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
-        promise.then(response => {
-            setMeusHabitos(response.data);
-        });
+        if (!token) {
+            navigate("/");
+        } else {
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            };
+            const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", config);
+            promise.then(response => {
+                setMeusHabitos(response.data);
+            });
+        }
+
     }, []);
 
     return (
