@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import logo from '../Assets/logo.png';
 import { ThreeDots } from  'react-loader-spinner';
 import TokenContext from "../Contexts/TokenContext";
@@ -35,9 +35,36 @@ export default function TelaLogin() {
     const {setToken} = useContext(TokenContext);
     const {setImg} = useContext(ImgContext);
 
+    useEffect(()=>{
+        let login = localStorage.getItem("email");
+        let senha = localStorage.getItem("password");
+        if (login !== null && senha !== null) {
+            setEmail(localStorage.getItem("email"));
+            setPassword(localStorage.getItem("password"));
+        const body = { email: localStorage.getItem("email") , password: localStorage.getItem("password") };
+        const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", body);
+
+        promise.then(response => {
+            setToken(response.data.token);
+            setImg(response.data.image);
+            navigate("/hoje");
+        });
+        promise.catch(err => {
+            alert(err.response.data.message);
+            setIsLoading(false);
+        });
+        }
+
+    }, []);
+
+
+
     function fazerLogin (event) {
         event.preventDefault();
         setIsLoading(true);
+        localStorage.setItem("email", email);
+        localStorage.setItem("password", password);
+
         const body = { email, password };
         const promise = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", body);
 
