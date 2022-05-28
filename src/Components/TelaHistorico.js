@@ -1,17 +1,36 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 import Menu from './Menu';
 import Topo from "./Topo";
 import TokenContext from "../Contexts/TokenContext";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import dayjs from 'dayjs';
+import locale from 'dayjs/locale/pt-br';
 
 export default function TelaHistorico () {
     const navigate = useNavigate();
     const { token } = useContext(TokenContext);
+    const now = dayjs().locale("pt-br");
     
     useEffect(() => {
         if (!token) {
             navigate("/");
+        } else {
+            const config = {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            };
+            const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config);
+            promise.then(response => {
+                console.log(response.data);
+            });
+            promise.catch(err => {
+                alert(err.response.data.message);
+            });
         }
     }, []);
 
@@ -22,6 +41,7 @@ export default function TelaHistorico () {
                 <Content>
                     <h2>Histórico</h2>
                     <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
+                    <Calendar locale="pt-br" className="calendario"/>
                 </Content>
             </Conteiner>
             <Menu />
