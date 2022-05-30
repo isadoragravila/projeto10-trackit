@@ -6,5 +6,21 @@
 
 .calendario {
     border-radius: 10px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    border: none !important;
+    font-family: 'Lexend Deca' !important;
 }
+
+.feito {
+    background-color: #8cc654 !important;
+    border-radius: 50%;
+    background-clip: content-box !important;
+    height: 50px;
+  }
+  
+  .nao-feito {
+    background: #ea5766 !important;
+    border-radius: 50%;
+    background-clip: content-box !important;
+    height: 50px;
+  }

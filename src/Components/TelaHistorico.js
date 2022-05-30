@@ -6,14 +6,13 @@ import Menu from './Menu';
 import Topo from "./Topo";
 import TokenContext from "../Contexts/TokenContext";
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import "react-calendar/dist/Calendar.css";
 import dayjs from 'dayjs';
-import locale from 'dayjs/locale/pt-br';
 
 export default function TelaHistorico () {
     const navigate = useNavigate();
     const { token } = useContext(TokenContext);
-    const now = dayjs().locale("pt-br");
+    const [historico, setHistorico] = useState([]);
     
     useEffect(() => {
         if (!token) {
@@ -26,7 +25,7 @@ export default function TelaHistorico () {
             };
             const promise = axios.get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", config);
             promise.then(response => {
-                console.log(response.data);
+                setHistorico(response.data);
             });
             promise.catch(err => {
                 alert(err.response.data.message);
@@ -34,14 +33,26 @@ export default function TelaHistorico () {
         }
     }, []);
 
+    function tileClassName({ date, view }) {
+        if (view === "month") {
+          if (historico.find((d) => d.day === dayjs(date).format("DD/MM/YYYY"))) {
+            const dia = historico.find((d) => d.day === dayjs(date).format("DD/MM/YYYY"));
+            const verif = dia.habits.filter((d) => d.done === false);
+            if (verif.length === 0) {
+              return "feito";
+            }
+            return "nao-feito";
+          }
+        }
+      }
+
     return (
         <>
             <Topo />
             <Conteiner>
                 <Content>
                     <h2>Histórico</h2>
-                    <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
-                    <Calendar locale="pt-br" className="calendario"/>
+                    <Calendar locale="pt-br" className="calendario" tileClassName={tileClassName}/>
                 </Content>
             </Conteiner>
             <Menu />
