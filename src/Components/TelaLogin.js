@@ -39,6 +39,7 @@ export default function TelaLogin() {
         let login = localStorage.getItem("email");
         let senha = localStorage.getItem("password");
         if (login !== null && senha !== null) {
+            setIsLoading(true);
             setEmail(localStorage.getItem("email"));
             setPassword(localStorage.getItem("password"));
         const body = { email: localStorage.getItem("email") , password: localStorage.getItem("password") };
@@ -56,8 +57,6 @@ export default function TelaLogin() {
         }
 
     }, []);
-
-
 
     function fazerLogin (event) {
         event.preventDefault();
